@@ -1,0 +1,211 @@
+[
+    {
+        "id": "e001",
+        "name": "Classic Cola",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Classic Cola",
+            "ingredientsText": "Carbonated Water, High Fructose Corn Syrup, Caramel Color, Phosphoric Acid, Natural Flavors, Caffeine."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "High Fructose Corn Syrup"
+        ],
+        "notes": "Classic sugary soda case."
+    },
+    {
+        "id": "e002",
+        "name": "Kids Juice Pouch",
+        "inputType": "Link (Simulated)",
+        "inputs": {
+            "productName": "Fruit Punch Pouch",
+            "ingredientsText": "Water, Apple Juice Concentrate, Ascorbic Acid, Citric Acid, Natural Flavors."
+        },
+        "expectedVerdict": "WARN",
+        "expectedTriggers": [
+            "fruit juice concentrate"
+        ],
+        "notes": "Concentrates are often hidden sugar sources."
+    },
+    {
+        "id": "e003",
+        "name": "Plain Oats",
+        "inputType": "Upload (Simulated)",
+        "inputs": {
+            "productName": "Rolled Oats",
+            "ingredientsText": "100% Whole Grain Rolled Oats."
+        },
+        "expectedVerdict": "PASS",
+        "expectedTriggers": [],
+        "notes": "Single ingredient, no sugar."
+    },
+    {
+        "id": "e004",
+        "name": "BBQ Sauce",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Smoky BBQ Sauce",
+            "ingredientsText": "Tomato Puree, High Fructose Corn Syrup, Molasses, Vinegar, Salt, Spices."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "High Fructose Corn Syrup",
+            "Molasses"
+        ],
+        "notes": "Multiple sugar sources."
+    },
+    {
+        "id": "e005",
+        "name": "Diet Soda",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Zero Sugar Cola",
+            "ingredientsText": "Carbonated Water, Caramel Color, Aspartame, Phosphoric Acid, Potassium Benzoate, Natural Flavors, Caffeine."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Aspartame"
+        ],
+        "notes": "Artificial sweeteners trigger FAIL in strict mode."
+    },
+    {
+        "id": "e006",
+        "name": "Energy Bar",
+        "inputType": "Upload (Simulated)",
+        "inputs": {
+            "productName": "Power Bar",
+            "ingredientsText": "Soy Protein Isolate, Brown Rice Syrup, Cane Sugar, Palm Oil, Cocoa."
+        },
+        "expectedVerdict": "WARN",
+        "expectedTriggers": [
+            "Brown Rice Syrup",
+            "Cane Sugar"
+        ],
+        "notes": "Syrups and cane sugar."
+    },
+    {
+        "id": "e007",
+        "name": "Greek Yogurt (Plain)",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Nonfat Greek Yogurt",
+            "ingredientsText": "Cultured Pasteurized Nonfat Milk."
+        },
+        "expectedVerdict": "PASS",
+        "expectedTriggers": [],
+        "notes": "Natural lactose is not flagged."
+    },
+    {
+        "id": "e008",
+        "name": "Vanilla Almond Milk",
+        "inputType": "Link (Simulated)",
+        "inputs": {
+            "productName": "Sweetened Almond Milk",
+            "ingredientsText": "Almondmilk (Filtered Water, Almonds), Cane Sugar, Calcium Carbonate, Sea Salt, Natural Flavors."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Cane Sugar"
+        ],
+        "notes": "Added cane sugar."
+    },
+    {
+        "id": "e009",
+        "name": "Ketchup",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Tomato Ketchup",
+            "ingredientsText": "Tomato Concentrate, Distilled Vinegar, High Fructose Corn Syrup, Corn Syrup, Salt, Spice, Onion Powder."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "High Fructose Corn Syrup",
+            "Corn Syrup"
+        ],
+        "notes": "Common hidden sugar source."
+    },
+    {
+        "id": "e010",
+        "name": "Rice Crackers",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Rice Snaps",
+            "ingredientsText": "Rice, Expeller Pressed Canola Oil, Salt, Sugar."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Sugar"
+        ],
+        "notes": "Explicit 'Sugar' ingredient."
+    },
+    {
+        "id": "e011",
+        "name": "Vitamin Water",
+        "inputType": "Link (Simulated)",
+        "inputs": {
+            "productName": "Enhanced Water",
+            "ingredientsText": "Reverse Osmosis Water, Crystalline Fructose, Cane Sugar, Vitamins."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Fructose",
+            "Cane Sugar"
+        ],
+        "notes": "Crystalline Fructose is a potent added sugar."
+    },
+    {
+        "id": "e012",
+        "name": "Granola",
+        "inputType": "Upload (Simulated)",
+        "inputs": {
+            "productName": "Honey Granola",
+            "ingredientsText": "Whole Grain Oats, Honey, Canola Oil, Molasses."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Molasses"
+        ],
+        "notes": "Honey is sometimes allowed, but Molasses triggers FAIL."
+    },
+    {
+        "id": "e013",
+        "name": "Coconut Water",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Pure Coconut Water",
+            "ingredientsText": "100% Coconut Water."
+        },
+        "expectedVerdict": "PASS",
+        "expectedTriggers": [],
+        "notes": "Natural sugars in fruit juice/water are usually PASS if no added sugar."
+    },
+    {
+        "id": "e014",
+        "name": "Pasta Sauce",
+        "inputType": "Scan (Simulated)",
+        "inputs": {
+            "productName": "Marinara",
+            "ingredientsText": "Tomatoes, Onions, Olive Oil, Salt, Basil, Sugar."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Sugar"
+        ],
+        "notes": "Unexpected sugar in savory food."
+    },
+    {
+        "id": "e015",
+        "name": "Salad Dressing",
+        "inputType": "Link (Simulated)",
+        "inputs": {
+            "productName": "Raspberry Vinaigrette",
+            "ingredientsText": "Water, Raspberry Juice Concentrate, Sugar, Vinegar."
+        },
+        "expectedVerdict": "FAIL",
+        "expectedTriggers": [
+            "Sugar",
+            "Concentrate"
+        ],
+        "notes": "High sugar content."
+    }
+]
