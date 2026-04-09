@@ -4,9 +4,6 @@ import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import evalSet from '@/data/evalSet.json';
 import { classifyProduct } from '@/lib/classifier';
-import { ClassificationResult } from '@/lib/types';
-
-type EvalCase = typeof evalSet[0];
 
 // Helper to map 0-1 confidence to High/Medium/Low
 function getConfidenceLabel(score: number): 'High' | 'Medium' | 'Low' {
@@ -102,88 +99,120 @@ export default function EvalPage() {
 
   return (
     <div className="min-h-screen sugar-bg text-ink p-6 sm:p-12 pb-24">
-      <div className="max-w-6xl mx-auto">
-
-        {/* MODEL INTENT BANNER */}
-        <div className="bg-white border border-black/5 rounded-xl p-4 mb-8 shadow-sm flex items-start gap-4">
-          <div className="text-xl">ℹ️</div>
-          <div>
-            <h3 className="font-bold text-sm text-ink mb-1">Model Intent</h3>
-            <p className="text-sm text-zinc-600 leading-relaxed">
-              SugarShield is intentionally optimized to minimize false negatives (missed sugar detection), even at the cost of lower overall accuracy.
-            </p>
-          </div>
-        </div>
+      <div className="max-w-6xl mx-auto space-y-8">
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight mb-2">Model Evaluation</h1>
-            <p className="text-zinc-500 max-w-lg text-sm">
-              Live performance metrics against the "Golden Set" of known products.
-              Transparency builds trust.
+            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 mb-1">Model Evaluation</h1>
+            <p className="text-sm text-zinc-500 max-w-lg leading-relaxed">
+              SugarShield is designed for safety-first decisions. Missing hidden sugar is riskier than over-warning.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            {/* MODE TOGGLE */}
-            <div className="bg-white border border-black/10 rounded-lg p-1 flex">
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="bg-white border border-zinc-200 rounded-lg p-1 flex">
               <button
                 onClick={() => setEvalMode('STRICT')}
-                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${evalMode === 'STRICT' ? 'bg-ink text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-50'}`}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${evalMode === 'STRICT' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-50'}`}
               >
                 Strict Mode
               </button>
               <button
                 onClick={() => setEvalMode('LENIENT')}
-                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${evalMode === 'LENIENT' ? 'bg-ink text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-50'}`}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${evalMode === 'LENIENT' ? 'bg-zinc-900 text-white shadow-sm' : 'text-zinc-500 hover:bg-zinc-50'}`}
               >
                 Lenient Mode
               </button>
             </div>
-            <Link href="/" className="px-4 py-2 bg-white border border-black/10 rounded-xl shadow-sm hover:shadow-md transition text-sm font-medium">
-              ← Back to App
+            <Link href="/" className="px-4 py-2 bg-white border border-zinc-200 rounded-xl shadow-sm hover:shadow-md transition text-sm font-medium text-zinc-700">
+              ← Back
             </Link>
           </div>
         </div>
 
         {evalMode === 'LENIENT' && (
-          <div className="mb-6 text-center">
+          <div className="text-center">
             <span className="inline-block px-3 py-1 bg-amber-50 text-amber-700 text-xs font-medium rounded-full border border-amber-100">
               Lenient Mode illustrates an alternative policy trade-off with higher pass rates but increased false negatives.
             </span>
           </div>
         )}
 
-        {/* Top Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-          <div className="bg-paper p-6 rounded-3xl shadow-sm border border-black/5 flex flex-col items-center text-center">
-            <span className="text-4xl font-black text-ink mb-1">{metrics.accuracy}%</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Policy Alignment Rate</span>
-            <p className="text-[10px] text-zinc-400 max-w-[200px] leading-tight">
-              This reflects alignment with SugarShield’s strict sugar-detection policy, not raw prediction accuracy.
-            </p>
-          </div>
-          <div className="bg-paper p-6 rounded-3xl shadow-sm border border-black/5 flex flex-col items-center text-center">
-            <span className={`text-4xl font-black mb-1 ${metrics.falseNegatives === 0 ? 'text-emerald-500' : 'text-red-500'}`}>
-              {metrics.falseNegatives}
-            </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">False Negatives</span>
-          </div>
-          <div className="bg-paper p-6 rounded-3xl shadow-sm border border-black/5 flex flex-col items-center text-center">
-            <span className="text-4xl font-black text-ink mb-1">{metrics.triggerMatchRate}%</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-400">Trigger Match Rate</span>
+        {/* Safety Summary */}
+        <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-6">
+          <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-5">Safety Summary</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="flex flex-col gap-1">
+              <span className={`text-3xl font-semibold ${metrics.falseNegatives === 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                {metrics.falseNegatives}
+              </span>
+              <span className="text-sm font-medium text-zinc-700">False Negatives</span>
+              <span className="text-xs text-zinc-400">Missed sugar detections</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-3xl font-semibold text-zinc-800">Intentional</span>
+              <span className="text-sm font-medium text-zinc-700">Conservative Bias</span>
+              <span className="text-xs text-zinc-400">Warn more, miss less</span>
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-3xl font-semibold text-zinc-800">Safety</span>
+              <span className="text-sm font-medium text-zinc-700">Goal</span>
+              <span className="text-xs text-zinc-400">Maximize safety over precision</span>
+            </div>
           </div>
         </div>
 
+        {/* Why This Matters */}
+        <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-6 space-y-4">
+          <h2 className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Why This Matters</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-zinc-50 rounded-xl p-4 space-y-1.5">
+              <p className="text-sm font-semibold text-zinc-800">Sugar hides in plain sight</p>
+              <p className="text-xs text-zinc-500 leading-relaxed">
+                Food labels often use dozens of alternative names — maltodextrin, dextrose, cane juice, rice syrup, corn syrup solids, and more.
+              </p>
+            </div>
+            <div className="bg-zinc-50 rounded-xl p-4 space-y-1.5">
+              <p className="text-sm font-semibold text-zinc-800">Keyword-only systems miss cases</p>
+              <p className="text-xs text-zinc-500 leading-relaxed">
+                A basic system looking for "sugar" would miss "corn syrup solids." SugarShield is specifically designed to catch these hidden forms.
+              </p>
+            </div>
+            <div className="bg-zinc-50 rounded-xl p-4 space-y-1.5">
+              <p className="text-sm font-semibold text-zinc-800">Missing it is worse</p>
+              <p className="text-xs text-zinc-500 leading-relaxed">
+                A false negative tells someone a product is safe when it isn't. A false positive just prompts a double-check. We optimize accordingly.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Decision */}
+        <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
+          <h2 className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-2">Our product decision</h2>
+          <p className="text-sm text-zinc-700 leading-relaxed">
+            We intentionally over-warn rather than miss hidden sugar, because false negatives are riskier for our users than a false alarm.
+          </p>
+        </div>
+
+        {/* Trigger Match Rate */}
+        <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm px-6 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-zinc-700">Trigger Match Rate</p>
+            <p className="text-xs text-zinc-400">How often the model identifies the correct sugar ingredient</p>
+          </div>
+          <span className="text-2xl font-semibold text-zinc-800">{metrics.triggerMatchRate}%</span>
+        </div>
+
         {/* Filter Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {(['ALL', 'PASS', 'WARN', 'FAIL', 'FALSE_NEG'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${filter === f
-                ? 'bg-ink text-paper shadow-md'
-                : 'bg-white text-zinc-500 border border-black/5 hover:bg-zinc-50'
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${filter === f
+                ? 'bg-zinc-900 text-white shadow-sm'
+                : 'bg-white text-zinc-500 border border-zinc-200 hover:bg-zinc-50'
                 }`}
             >
               {f === 'FALSE_NEG' ? 'False Negatives' : f}
@@ -192,11 +221,11 @@ export default function EvalPage() {
         </div>
 
         {/* Results Table */}
-        <div className={`bg-paper rounded-3xl shadow-sm border border-black/5 overflow-hidden ${evalMode === 'LENIENT' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
+        <div className={`bg-white rounded-2xl shadow-sm border border-zinc-100 overflow-hidden ${evalMode === 'LENIENT' ? 'opacity-50 pointer-events-none grayscale' : ''}`}>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse min-w-[900px]">
               <thead>
-                <tr className="bg-subtle border-b border-black/5 text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">
+                <tr className="bg-zinc-50 border-b border-zinc-100 text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">
                   <th className="p-4 w-48">Example</th>
                   <th className="p-4 w-32">Input Type</th>
                   <th className="p-4 w-32">Expected</th>
@@ -206,11 +235,11 @@ export default function EvalPage() {
                   <th className="p-4">Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/5">
+              <tbody className="divide-y divide-zinc-50">
                 {filteredResults.map((r) => (
-                  <tr key={r.id} className="group hover:bg-cream/50 transition-colors text-sm">
+                  <tr key={r.id} className="group hover:bg-zinc-50/60 transition-colors text-sm">
                     <td className="p-4">
-                      <div className="font-medium text-ink">{r.name}</div>
+                      <div className="font-medium text-zinc-800">{r.name}</div>
                       <div className="text-xs text-zinc-400 truncate max-w-[180px]">{r.inputs.productName}</div>
                     </td>
                     <td className="p-4 text-xs text-zinc-500">
@@ -222,7 +251,7 @@ export default function EvalPage() {
                     <td className="p-4">
                       <VerdictBadge verdict={r.actualVerdict} />
                       {!r.isCorrect && (
-                        <span className="ml-2 inline-block w-2 h-2 rounded-full bg-red-500" title="Mismatch" />
+                        <span className="ml-2 inline-block w-2 h-2 rounded-full bg-red-400" title="Mismatch" />
                       )}
                     </td>
                     <td className="p-4">
@@ -241,7 +270,7 @@ export default function EvalPage() {
                     <td className="p-4">
                       <div className="flex flex-wrap gap-1">
                         {r.actualTriggers.slice(0, 3).map(t => (
-                          <span key={t} className="inline-block px-1.5 py-0.5 bg-cocoa/5 border border-cocoa/10 rounded text-[10px] text-cocoa font-medium">
+                          <span key={t} className="inline-block px-1.5 py-0.5 bg-zinc-100 border border-zinc-200 rounded text-[10px] text-zinc-600 font-medium">
                             {t}
                           </span>
                         ))}
@@ -257,19 +286,26 @@ export default function EvalPage() {
             </table>
           </div>
 
-          {/* Table Footer */}
-          <div className="p-4 bg-subtle border-t border-black/5">
+          <div className="px-4 py-3 bg-zinc-50 border-t border-zinc-100">
             <p className="text-xs text-zinc-400 text-center">
-              * Live evaluation data. Lenient mode results are simulated for comparison.
+              Live evaluation data. Lenient mode results are simulated for comparison.
             </p>
           </div>
         </div>
 
-        {/* PM INSIGHT CALLOUT */}
-        <div className="mt-8 bg-cocoa/5 rounded-2xl p-6 border border-cocoa/10">
-          <h3 className="text-xs font-bold text-cocoa uppercase tracking-wider mb-2">PM Insight</h3>
-          <p className="text-sm text-zinc-700 leading-relaxed italic">
-            “Several WARN results (e.g., Diet Soda, Coconut Water) are intentional. These products contain sweeteners or naturally occurring sugars that are debated in nutritional science. SugarShield defaults to caution rather than silent pass to preserve user trust.”
+        {/* PM Insight */}
+        <div className="bg-white rounded-2xl border border-zinc-100 shadow-sm p-6">
+          <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">PM Insight</p>
+          <p className="text-sm text-zinc-600 leading-relaxed italic">
+            "Several WARN results (e.g., Diet Soda, Coconut Water) are intentional. These products contain sweeteners or naturally occurring sugars that are debated in nutritional science. SugarShield defaults to caution rather than silent pass to preserve user trust."
+          </p>
+        </div>
+
+        {/* Known Limitation */}
+        <div className="bg-zinc-50 border border-zinc-200 rounded-2xl p-5">
+          <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Known limitation</h2>
+          <p className="text-sm text-zinc-500 leading-relaxed">
+            This system may over-flag some products. This is an intentional tradeoff to prioritize user safety.
           </p>
         </div>
 
@@ -287,7 +323,7 @@ function VerdictBadge({ verdict }: { verdict: string }) {
   const label = getVerdictLabel(verdict);
 
   return (
-    <span className={`inline-flex items-center justify-center px-2 py-1 rounded text-[10px] font-bold w-full max-w-[140px] text-center ${styles}`}>
+    <span className={`inline-flex items-center justify-center px-2 py-1 rounded text-[10px] font-semibold w-full max-w-[140px] text-center ${styles}`}>
       {label}
     </span>
   );
